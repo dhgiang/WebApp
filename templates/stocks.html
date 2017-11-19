@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html ng-app="stockApp">
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Stocks Angular</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.4.7/angular.min.js"></script>
+    <script>
+        var stockApp = angular.module('stockApp', []);
+        stockApp.controller('StockCtrl', function($scope, $http){
+            $http.get('http://localhost:5000/stocks').success(function(data){
+                $scope.stocks = data;
+            });
+            $scope.sortField = 'Name'
+            $scope.reverse = true;
+        });
+    </script>
+</head>
+<body ng-controller="StockCtrl">
+Search: <input ng-model="query" type="text" />
+<table>
+    <tr>
+        <th><a href="" ng-click="sortField = 'Symbol'; reverse = !reverse">Symbol</a></th>
+        <th><a href="" ng-click="sortField = 'Name'; reverse = !reverse">Name</a></th>
+        <th><a href="" ng-click="sortField = 'LastSale'; reverse = !reverse">Last Price</a></th>
+        <th><a href="" ng-click="sortField = 'Sector'; reverse = !reverse">Sector</a></th>
+    </tr>
+    <tr ng-repeat="stock in stocks | filter:query | orderBy:sortField:reverse">
+        <td>{{'{{stock.Symbol}}'}}</td>
+        <td>{{'{{stock.Name}}'}}</td>
+        <td>{{'{{stock.LastSale | currency}}'}}</td>
+        <td>{{'{{stock.Sector}}'}}</td>
+    </tr>
+</table>
+</body>
+</html>
